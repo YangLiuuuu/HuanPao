@@ -1,68 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ScrollView
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <com.yang.huanpao.ui.view.StepArcView
+                android:id="@+id/step_count_arc_view"
+                android:layout_width="150dp"
+                android:layout_height="150dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="150dp"
+                android:orientation="vertical">
 
-                <com.yang.huanpao.ui.view.StepArcView
-                    android:id="@+id/step_count_arc_view"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp" />
-
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="20dp"
+                    android:text="本周目标步数"
+                    android:textSize="25sp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="20dp"
-                        android:text="本周目标步数"
-                        android:textSize="25sp" />
+                <TextView
+                    android:id="@+id/week_plan_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="15000"
+                    android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/week_plan_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="1500"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/week_plan_distance_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="15dp"
-                        android:text="离本周目标还差5000步，加油哦！"
-                        android:textSize="18sp" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/week_plan_distance_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15dp"
+                    android:text="离本周目标还差5000步，加油哦！"
+                    android:textSize="18sp" />
             </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="#fff" />
-            <lecho.lib.hellocharts.view.LineChartView
-                android:id="@+id/line_chart_view"
-                android:layout_width="match_parent"
-                android:layout_height="185dp" />
-            <include layout="@layout/include_money_layout"/>
         </LinearLayout>
-    </ScrollView>
-</android.support.design.widget.CoordinatorLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#fff" />
+        <lecho.lib.hellocharts.view.LineChartView
+            android:id="@+id/line_chart_view"
+            android:layout_width="match_parent"
+            android:layout_height="185dp" />
+
+        <include layout="@layout/include_money_layout" />
+    </LinearLayout>
+</LinearLayout>

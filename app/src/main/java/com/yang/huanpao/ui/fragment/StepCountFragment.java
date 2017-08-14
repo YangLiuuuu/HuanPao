@@ -44,12 +44,23 @@ public class StepCountFragment extends BaseFragment {
     @BindView(R.id.circle_image)
     public CircleImageView circleImageView;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.step_count_fragment,container,false);
         ButterKnife.bind(this,view);
+
+//        initData();
         return view;
+    }
+
+    private void initData() {
+//        String planWalk_QTY = (String) sp.getParam("planWalk_QTY","7000");
+        //设置当前步数为0
+        stepArcView.setCurrentCount(7000,0);
+    }
+
+    public StepArcView getStepArcView(){
+        return stepArcView;
     }
 }

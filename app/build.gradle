@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+
 
 android {
     compileSdkVersion 26
@@ -39,4 +41,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'org.greenrobot:greendao:3.2.2'
+    // add library
+    compile files('libs/lite-orm-1.7.0.jar')
 }

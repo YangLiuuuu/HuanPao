@@ -38,9 +38,9 @@ public class StepArcView extends View {
      */
     private float angleLength = 270;
 
-    private float numberTextSize = 50;
+    private float numberTextSize = 35;
 
-    private float currentAngleLength = 100;
+    private float currentAngleLength = 0;
 
     /**
      * 动画时长

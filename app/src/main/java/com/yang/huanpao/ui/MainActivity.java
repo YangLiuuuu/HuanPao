@@ -45,15 +45,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initTab() {
-        step_count_tab.setOnClickListener(this);
-        magazine_tab.setOnClickListener(this);
-        dynamic_tab.setOnClickListener(this);
-        mine_tab.setOnClickListener(this);
-        mTabs = new RelativeLayout[4];
-        mTabs[0] = step_count_tab;
-        mTabs[1] = magazine_tab;
-        mTabs[2] = dynamic_tab;
-        mTabs[3] = mine_tab;
+//        step_count_tab.setOnClickListener(this);
+//        magazine_tab.setOnClickListener(this);
+//        dynamic_tab.setOnClickListener(this);
+//        mine_tab.setOnClickListener(this);
+//        mTabs = new RelativeLayout[4];
+//        mTabs[0] = step_count_tab;
+//        mTabs[1] = magazine_tab;
+//        mTabs[2] = dynamic_tab;
+//        mTabs[3] = mine_tab;
         StepCountFragment stepCountFragment = new StepCountFragment();
         TempFragment t1 = new TempFragment();
         TempFragment t2 = new TempFragment();
