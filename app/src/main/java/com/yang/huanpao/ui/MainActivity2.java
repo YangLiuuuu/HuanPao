@@ -4,13 +4,18 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.ScrollView;
 
 import com.yang.huanpao.R;
 import com.yang.huanpao.base.BaseActivity;
@@ -24,7 +29,8 @@ import com.yang.huanpao.util.SharePreferencesUtil;
  * Created by yang on 2017/8/14.
  */
 
-public class MainActivity2 extends BaseActivity {
+@RequiresApi(api = Build.VERSION_CODES.M)
+public class MainActivity2 extends BaseActivity{
 
 //    @BindView(R.id.tab)
     public TabLayout tab;
@@ -32,6 +38,8 @@ public class MainActivity2 extends BaseActivity {
     private Toolbar toolbar;
 
     public FrameLayout fragmentContainer;
+
+    private ScrollView scrollview;
 
     final StepCountFragment stepCountFragment = new StepCountFragment();
 
@@ -44,10 +52,27 @@ public class MainActivity2 extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.mipmap.logo);
         toolbar.setTitle("环跑");
+
         setSupportActionBar(toolbar);
 
         setUpService();
         initTab();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.tool_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.plan:
+                startActivity(PlanActivity.class,null,false);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean isBind = false;
@@ -80,7 +105,7 @@ public class MainActivity2 extends BaseActivity {
                 @Override
                 public void updateUi(int stepCount) {
                     String planWalk_QTY = SharePreferencesUtil.getString(MainActivity2.this,"plan_walk");
-                    stepCountFragment.getStepArcView().setCurrentCount(7000,stepCount);
+                    stepCountFragment.getStepArcView().setCurrentCount(Integer.parseInt(planWalk_QTY),stepCount);
                 }
             });
         }

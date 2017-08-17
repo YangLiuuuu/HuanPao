@@ -48,6 +48,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.PlanActivity"/>
+
         <service android:name=".step.service.StepService">
             <intent-filter>
                 <!-- 系统启动完成后会调用-->

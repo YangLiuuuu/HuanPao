@@ -20,7 +20,7 @@ import com.yang.huanpao.R;
  * Created by yang on 2017/8/10.
  */
 
-public class StepArcView extends View {
+public class StepArcView extends View{
     private Paint mPaint = new Paint();
 
     /**
@@ -38,7 +38,7 @@ public class StepArcView extends View {
      */
     private float angleLength = 270;
 
-    private float numberTextSize = 35;
+    private float numberTextSize = 25;
 
     private float currentAngleLength = 0;
 

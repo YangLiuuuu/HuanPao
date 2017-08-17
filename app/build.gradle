@@ -42,6 +42,5 @@ dependencies {
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'org.greenrobot:greendao:3.2.2'
-    // add library
-    compile files('libs/lite-orm-1.7.0.jar')
+    compile 'org.litepal.android:core:1.6.0'
 }

@@ -1,31 +1,25 @@
 package com.yang.huanpao.bean;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Generated;
+import org.litepal.crud.DataSupport;
 
 /**
  * Created by yang on 2017/6/23.
  */
 
-@Entity
-public class StepData {
+public class StepData extends DataSupport{
 
-    @Id
     private int id;
 
     private String today;
 
     private String step;
 
-    @Generated(hash = 1510577093)
     public StepData(int id, String today, String step) {
         this.id = id;
         this.today = today;
         this.step = step;
     }
 
-    @Generated(hash = 90761876)
     public StepData() {
     }
 

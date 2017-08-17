@@ -50,9 +50,8 @@
         android:layout_height="3dp"
         android:background="#fff" />
     <lecho.lib.hellocharts.view.LineChartView
-        android:background="@color/ocean_blue"
         android:id="@+id/line_chart_view"
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="185dp" />
     <include layout="@layout/include_money_layout" />
 </LinearLayout>

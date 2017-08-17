@@ -15,8 +15,6 @@ import java.util.List;
 
 public class DbUtil {
 
-
-
     public static String DB_NAME;
     public static LiteOrm liteOrm;
 
