@@ -19,7 +19,7 @@ public class App extends LitePalApplication {
         super.onCreate();
 
         setDatabase();
-        Bmob.initialize(this, Const.APP_ID);
+        Bmob.initialize(this, Const.BMOB_APP_ID);
         SharePreferencesUtil.put(this,"plan_walk","7000");
         SharePreferencesUtil.put(this,"remind","1");
         SharePreferencesUtil.put(this,"achieve_time","8:00");

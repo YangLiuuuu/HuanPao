@@ -60,6 +60,13 @@ public class MainActivity2 extends BaseActivity{
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(connection);
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.tool_menu,menu);
         return true;
@@ -112,7 +119,7 @@ public class MainActivity2 extends BaseActivity{
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            setUpService();
         }
     };
 
@@ -124,8 +131,8 @@ public class MainActivity2 extends BaseActivity{
         final TempFragment t1 = new TempFragment();
         final TempFragment t2 = new TempFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, stepCountFragment).
-                add(R.id.fragment_container, t1)
+                .add(R.id.fragment_container, stepCountFragment)
+                .add(R.id.fragment_container, t1)
                 .add(R.id.fragment_container, t2)
                 .hide(stepCountFragment).hide(t1)
                 .hide(t2)

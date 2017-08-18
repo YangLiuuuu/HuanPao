@@ -6,6 +6,12 @@ apply plugin: 'org.greenrobot.greendao' // apply plugin
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
     defaultConfig {
         applicationId "com.yang.huanpao"
         minSdkVersion 19
@@ -43,4 +49,7 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'org.greenrobot:greendao:3.2.2'
     compile 'org.litepal.android:core:1.6.0'
+    compile files('libs/mta-sdk-1.6.2.jar')
+    compile files('libs/open_sdk_r5793.jar')
+    compile files('libs/open_sdk_r5793_lite.jar')
 }

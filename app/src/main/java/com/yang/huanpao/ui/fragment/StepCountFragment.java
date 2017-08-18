@@ -1,5 +1,6 @@
 package com.yang.huanpao.ui.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -12,9 +13,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.tencent.open.SocialConstants;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 import com.yang.huanpao.R;
 import com.yang.huanpao.base.BaseFragment;
 import com.yang.huanpao.bean.StepData;
+import com.yang.huanpao.config.Const;
 import com.yang.huanpao.ui.view.StepArcView;
 
 import org.litepal.crud.DataSupport;
@@ -27,6 +33,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
 import lecho.lib.hellocharts.gesture.ZoomType;
@@ -66,7 +73,10 @@ public class StepCountFragment extends BaseFragment{
     public CircleImageView circleImageView;
 
     private List<PointValue>mPointValues = new ArrayList<>();
+
     private List<AxisValue>mAxisValue = new ArrayList<>();
+
+    private Tencent mTencent;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
@@ -78,6 +88,52 @@ public class StepCountFragment extends BaseFragment{
 //        initData();
         initLineChart();
         return view;
+    }
+
+    //qq分享测试
+    @OnClick(R.id.check_btn)
+    public void onCheckBtnClick(View view){
+        Bundle bundle = new Bundle();
+        bundle.putString(SocialConstants.PARAM_TARGET_URL, "http://connect.qq.com/");
+//分享的标题。注：PARAM_TITLE、PARAM_IMAGE_URL、PARAM_	SUMMARY不能全为空，最少必须有一个是有值的。
+        bundle.putString(SocialConstants.PARAM_TITLE, "我在测试");
+//分享的图片URL
+        bundle.putString(SocialConstants.PARAM_IMAGE_URL,
+                "http://img3.cache.netease.com/photo/0005/2013-03-07/8PBKS8G400BV0005.jpg");
+//分享的消息摘要，最长50个字
+        bundle.putString(SocialConstants.PARAM_SUMMARY, "测试");
+//手Q客户端顶部，替换“返回”按钮文字，如果为空，用返回代替
+        bundle.putString(SocialConstants.PARAM_APPNAME, "??我在测试");
+//标识该消息的来源应用，值为应用名称+AppId。
+        bundle.putString(SocialConstants.PARAM_APP_SOURCE, "星期几" + Const.Tencent_APP_ID);
+
+        mTencent = Tencent.createInstance(Const.Tencent_APP_ID,getContext().getApplicationContext());
+
+        mTencent.shareToQQ(getActivity(), bundle, new IUiListener() {
+            @Override
+            public void onComplete(Object o) {
+
+            }
+
+            @Override
+            public void onError(UiError uiError) {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (null != mTencent){
+            mTencent.onActivityResult(requestCode,resultCode,data);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

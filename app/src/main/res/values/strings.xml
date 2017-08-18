@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HuanPao</string>
+    <string name="app_name">环跑</string>
     <string name="login_edit_account">账号</string>
     <string name="login_edit_password">密码</string>
 </resources>

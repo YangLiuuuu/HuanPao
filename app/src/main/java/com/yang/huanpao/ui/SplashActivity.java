@@ -20,7 +20,7 @@ public class SplashActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 1:
-                    startActivity(MainActivity.class,null,true);
+                    startActivity(MainActivity2.class,null,true);
                     break;
                 case 0:
                     startActivity(LoginActivity.class,null,true);

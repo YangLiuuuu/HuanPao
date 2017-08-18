@@ -5,7 +5,9 @@ package com.yang.huanpao.config;
  */
 
 public class Const {
-    public static final String APP_ID = "c091442968936c27598e168d8372aeea";
+    public static final String BMOB_APP_ID = "c091442968936c27598e168d8372aeea";
 
     public static boolean isDebug = false;
+
+    public static final String Tencent_APP_ID = "1106356504";
 }
