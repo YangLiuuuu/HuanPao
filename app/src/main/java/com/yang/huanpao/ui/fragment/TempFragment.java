@@ -12,6 +12,7 @@ import android.widget.Button;
 import com.yang.huanpao.R;
 import com.yang.huanpao.base.BaseFragment;
 import com.yang.huanpao.ui.LoginActivity;
+import com.yang.huanpao.util.SharePreferencesUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +39,7 @@ public class TempFragment extends BaseFragment {
     @OnClick(R.id.logout)
     public void onLogoutClick(View v){
         Log.i("yang","点击注销");
+        SharePreferencesUtil.put(getContext(),"isLogin",false);
         startActivity(new Intent(getContext(), LoginActivity.class));
         getActivity().finish();
     }

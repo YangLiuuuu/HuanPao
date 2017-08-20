@@ -1,23 +1,34 @@
 package com.yang.huanpao.bean;
 
-import org.litepal.crud.DataSupport;
+import cn.bmob.v3.BmobObject;
 
 /**
  * Created by yang on 2017/6/23.
  */
 
-public class StepData extends DataSupport{
+public class BmobStepData extends BmobObject{
 
     private String today;
 
     private String step;
 
-    public StepData(String today, String step) {
+
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public BmobStepData(int id, String today, String step) {
         this.today = today;
         this.step = step;
     }
 
-    public StepData() {
+    public BmobStepData() {
     }
 
 

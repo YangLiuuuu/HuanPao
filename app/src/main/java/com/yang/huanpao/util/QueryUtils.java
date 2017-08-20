@@ -5,8 +5,11 @@ package com.yang.huanpao.util;
  */
 
 public class QueryUtils {
+
     private QueryUtils instance = new QueryUtils();
     public QueryUtils getInstance(){
         return instance;
     }
+
+
 }

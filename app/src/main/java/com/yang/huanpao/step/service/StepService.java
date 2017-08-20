@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -23,13 +24,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.yang.huanpao.R;
+import com.yang.huanpao.bean.BmobStepData;
 import com.yang.huanpao.bean.StepData;
+import com.yang.huanpao.bean.User;
 import com.yang.huanpao.step.accelerometer.StepCount;
 import com.yang.huanpao.step.accelerometer.StepPassValueListener;
 import com.yang.huanpao.step.util.CountDownTimer;
 import com.yang.huanpao.step.util.UpdateCallBack;
 import com.yang.huanpao.ui.MainActivity;
-import com.yang.huanpao.ui.MainActivity2;
 import com.yang.huanpao.util.SharePreferencesUtil;
 
 import org.litepal.crud.DataSupport;
@@ -37,6 +39,13 @@ import org.litepal.crud.DataSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by yang on 2017/6/23.
@@ -56,7 +65,7 @@ public class StepService extends Service implements SensorEventListener {
 
     private NotificationManager notificationManager;
 
-    private Notification.Builder mBuilder;
+    private NotificationCompat.Builder mBuilder;
 
     private BroadcastReceiver mReceiver;
 
@@ -78,12 +87,14 @@ public class StepService extends Service implements SensorEventListener {
 
     private int previousStepCount = 0;
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
 
         stopForeground(true);
         unregisterReceiver(mReceiver);
+        CURRENT_STEP = 0;
         Log.d(TAG, "StepService 关闭");
     }
 
@@ -113,14 +124,14 @@ public class StepService extends Service implements SensorEventListener {
             @Override
             public void run() {
                 startStepDetector();
-                Log.i("liuyang","开始计步");
+                Log.i("yang","开始计步");
             }
         }).start();
         startTimeCount();
     }
 
     private void initNotification() {
-        mBuilder = new Notification.Builder(this);
+        mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setContentTitle(getResources().getString(R.string.app_name))
                 .setContentText("今日步数" + CURRENT_STEP + "步")
                 .setContentIntent(getDefaultIntent(Notification.FLAG_ONGOING_EVENT))
@@ -128,7 +139,7 @@ public class StepService extends Service implements SensorEventListener {
                 .setPriority(Notification.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
                 .setOngoing(true)
-                .setSmallIcon(R.mipmap.logo);
+                .setSmallIcon(R.mipmap.logo2);
         Notification notification = mBuilder.build();
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         startForeground(notifyId_Step, notification);
@@ -153,7 +164,7 @@ public class StepService extends Service implements SensorEventListener {
         }else if (list.size() == 1){
             CURRENT_STEP = Integer.parseInt(list.get(0).getStep());
         }else {
-            Toast.makeText(this,"访问数据库出错",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"StepService访问数据库出错",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -247,7 +258,7 @@ public class StepService extends Service implements SensorEventListener {
      */
     private void remindNotify() {
         //设置点击跳转
-        Intent intent = new Intent(this, MainActivity2.class);
+        Intent intent = new Intent(this, MainActivity.class);
         PendingIntent hangPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         String plan = this.getSharedPreferences("share_date", Context.MODE_MULTI_PROCESS).getString("planWalk_QTY", "7000");
@@ -261,7 +272,8 @@ public class StepService extends Service implements SensorEventListener {
                 .setAutoCancel(true)
                 .setOngoing(false)
                 .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
-                .setSmallIcon(R.mipmap.logo);
+                .setSmallIcon(R.mipmap.logo2)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.logo));
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         manager.notify(notify_remind_id, mBuiler.build());
     }
@@ -337,7 +349,9 @@ public class StepService extends Service implements SensorEventListener {
                 .setContentText("今日步数" + CURRENT_STEP + "步")
                 .setWhen(System.currentTimeMillis())
                 .setContentIntent(hangPendingIntent)
-                .setSmallIcon(R.mipmap.logo)
+                .setSmallIcon(R.mipmap.logo2)
+                .setTicker("ss")
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.logo4))
                 .build();
         notificationManager.notify(notifyId_Step, notification);
         if (mCallBack != null) {
@@ -380,6 +394,67 @@ public class StepService extends Service implements SensorEventListener {
                 data.updateAll("today = ?", CURRENT_DATA);
             }
         }
+
+        saveInBmob();
+    }
+
+    //保存到bmob
+    private void saveInBmob() {
+        final int tempStep = CURRENT_STEP;
+        final BmobStepData bsd = new BmobStepData();
+        final User user = BmobUser.getCurrentUser(User.class);
+        BmobQuery<BmobStepData> query = new BmobQuery<>();
+        query.addWhereEqualTo("userId",user.getObjectId());
+        query.addWhereEqualTo("today",CURRENT_DATA);
+        query.findObjects(new FindListener<BmobStepData>() {
+            @Override
+            public void done(List<BmobStepData> list, BmobException e) {
+                if (e == null){
+                    if (list.size() == 0 || list.isEmpty()){
+                        bsd.setToday(CURRENT_DATA);
+                        bsd.setStep(tempStep+ "");
+                        bsd.setUserId(BmobUser.getCurrentUser(User.class).getObjectId());
+                        bsd.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                if (e == null){
+                                    Log.i("yang","数据已保存成功");
+                                }else {
+                                    Log.i("yang","数据保存失败 :" + e.getMessage());
+                                }
+                            }
+                        });
+                    }else {
+                        BmobStepData bsd = list.get(0);
+                        bsd.setStep(tempStep+"");
+                        bsd.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null){
+                                    Log.i("yang","数据已更新成功");
+                                }else {
+                                    Log.i("yang","数据更新失败:" + e.getMessage());
+                                }
+                            }
+                        });
+                    }
+                }else {
+                    bsd.setToday(CURRENT_DATA);
+                    bsd.setStep(CURRENT_STEP + "");
+                    bsd.setUserId(user.getObjectId());
+                    bsd.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            if (e == null){
+                                Log.i("yang","第一次保存成功");
+                            }else {
+                                Log.i("yang","第一次保存失败 :" + e.getMessage());
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override

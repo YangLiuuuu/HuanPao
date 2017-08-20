@@ -1,44 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <EditText
-        android:id="@+id/edit_account"
-        android:inputType="number"
-        android:maxLength="8"
-        android:maxLines="1"
-        android:hint="@string/login_edit_account"
+
+
+    <ImageView
+        android:id="@+id/iv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/edit_password"
-        android:hint="@string/login_edit_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/ic_033"
+        android:layout_gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/tex_register"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp">
-        <Button
-            android:id="@+id/btn_register"
-            android:text="注册"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"/>
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_alignParentEnd="true"
-            android:text="登录"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:text="注册新账号"
+        android:textSize="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginEnd="12dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="11dp" />
 
-        <Button
-            android:id="@+id/login_by_qq"
-            android:layout_centerHorizontal="true"
-            android:text="qq登录"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/login_by_qq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QQ登录"
+        android:textSize="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="11dp"/>
 
-</LinearLayout>
+    <EditText
+        android:background="@null"
+        android:id="@+id/edit_account"
+        android:layout_width="240dp"
+        android:layout_height="40dp"
+        android:textSize="18dp"
+        android:hint=" 请输入用户名"
+        android:layout_marginTop="224dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/btn_login" />
+
+    <EditText
+        android:background="@null"
+        android:id="@+id/edit_password"
+        android:layout_width="240dp"
+        android:layout_height="40dp"
+        android:textSize="18dp"
+        android:hint=" 请输入密码"
+        android:inputType="numberPassword"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/edit_account"
+        android:layout_alignStart="@+id/edit_account" />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:text="登 录"
+        android:textSize="19dp"
+        android:textColor="#707376"
+        android:background="@drawable/shape"
+        android:alpha="0.9"
+        android:clickable="true"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/edit_password"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

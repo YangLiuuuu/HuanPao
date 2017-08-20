@@ -1,100 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yang.huanpao.ui.MainActivity"
-    android:orientation="vertical">
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/fragment_container">
-    </FrameLayout>
-    <LinearLayout
-        android:id="@+id/tabs"
+    android:orientation="vertical"
+    tools:context="com.yang.huanpao.ui.MainActivity">
+    <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <RelativeLayout
-            android:id="@+id/step_count_tab"
-            android:layout_width="0dp"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <TableLayout
+        android:id="@+id/tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+    </TableLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <ImageView
-                android:layout_centerInParent="true"
-                android:id="@+id/step_count_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"/>
-            <TextView
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:layout_below="@+id/step_count_icon"
-                android:text="计步"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/magazine_tab"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <ImageView
-                android:layout_centerInParent="true"
-                android:id="@+id/magazine_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"/>
-            <TextView
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:layout_below="@+id/magazine_icon"
-                android:text="杂志"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/dynamic_tab"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <ImageView
-                android:layout_centerInParent="true"
-                android:id="@+id/dynamic_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"/>
-            <TextView
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:layout_below="@+id/dynamic_icon"
-                android:text="动态"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/mine_tab"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <ImageView
-                android:layout_centerInParent="true"
-                android:id="@+id/mine_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"/>
-            <TextView
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:layout_below="@+id/mine_icon"
-                android:text="我的"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
-    </LinearLayout>
-</LinearLayout>
+            android:background="@color/colorPrimary">
+        </FrameLayout>
+    </ScrollView>
+</android.support.design.widget.CoordinatorLayout>
