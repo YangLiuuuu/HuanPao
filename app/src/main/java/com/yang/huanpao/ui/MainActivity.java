@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
@@ -26,14 +28,17 @@ import com.yang.huanpao.step.service.StepService;
 import com.yang.huanpao.step.util.UpdateCallBack;
 import com.yang.huanpao.ui.fragment.StepCountFragment;
 import com.yang.huanpao.ui.fragment.TempFragment;
+import com.yang.huanpao.util.MessageEvent;
 import com.yang.huanpao.util.SharePreferencesUtil;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -56,13 +61,28 @@ public class MainActivity extends BaseActivity {
 
     private ScrollView scrollview;
 
-    private CopyOnWriteArrayList<StepData> cowa = new CopyOnWriteArrayList<>();
-
     private final List<StepData> temStepDatas = Collections.synchronizedList(new ArrayList<StepData>());
 
     private boolean isDataBaseChanged = false;
 
-    final StepCountFragment stepCountFragment = new StepCountFragment();
+    private StepService stepService;
+
+    StepCountFragment stepCountFragment;
+
+    TempFragment t1 = new TempFragment();
+    TempFragment t2 = new TempFragment();
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            for (StepData sd : temStepDatas) {
+                Log.i("yangyang", sd.getToday() + "  " + sd.getStep() + "");
+                sd.save();
+            }
+            EventBus.getDefault().post(new MessageEvent("数据库已更新"));
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     protected void onStart() {
@@ -70,57 +90,40 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(connection);
+        SharePreferencesUtil.put(this,"lastTimeStep",stepService.getStepCount());
+        Log.i("onDestroy",stepService.getStepCount() +"步");
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.i("yangyang", "old is :" + SharePreferencesUtil.getString(this, "userId"));
-        Log.i("yangyang", "new is : " + BmobUser.getCurrentUser(User.class).getObjectId());
-        if (!SharePreferencesUtil.getString(this, "userId").equals(BmobUser.getCurrentUser(User.class).getObjectId())) {
-            DataSupport.deleteAll(StepData.class);
-            isDataBaseChanged = true;
-            BmobQuery<BmobStepData> query = new BmobQuery<>();
-            query.addWhereEqualTo("userId", BmobUser.getCurrentUser(User.class).getObjectId());
-            query.findObjects(new FindListener<BmobStepData>() {
-                @Override
-                public void done(List<BmobStepData> list, BmobException e) {
-                    synchronized (temStepDatas) {
-                        if (list != null) {
-                            for (BmobStepData bsd : list) {
-                                StepData sd = new StepData();
-                                sd.setStep(bsd.getStep());
-                                sd.setToday(bsd.getToday());
-                                temStepDatas.add(sd);
-                            }
-                        }
-                    }
-                }
-            });
-        } else {
-            Log.i("yangyang", "删除数据库未执行");
-        }
-        SharePreferencesUtil.put(this, "userId", BmobUser.getCurrentUser(User.class).getObjectId());
 
-        if (isDataBaseChanged) {
-            if (temStepDatas.size() == 0) {
-                Log.i("yangyang", "数据库无数据");
-            }
-            for (StepData sd : temStepDatas) {
-                Log.i("yangyang", sd.getToday() + "," + sd.getStep() + "步");
-            }
-            isDataBaseChanged = false;
+        initDataBase();
+        SharePreferencesUtil.put(this, "oldUserId", BmobUser.getCurrentUser(User.class).getObjectId());
 
-        }
 
 //        ButterKnife.bind(this);
-        tab = (TabLayout)
+        tab = (TabLayout) findViewById(R.id.tab);
 
-                findViewById(R.id.tab);
-
-        toolbar = (Toolbar)
-
-                findViewById(R.id.toolbar);
-        toolbar.setLogo(R.mipmap.logo4);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setLogo(R.mipmap.logo3);
         toolbar.setTitle("环跑");
 
         setSupportActionBar(toolbar);
@@ -131,11 +134,40 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(connection);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent message){
+
     }
+
+    private void initDataBase() {
+        Log.i("yangyang", "old is :" + SharePreferencesUtil.getString(this, "oldUserId"));
+        Log.i("yangyang", "new is : " + BmobUser.getCurrentUser(User.class).getObjectId());
+        if (!SharePreferencesUtil.getString(this, "oldUserId").equals(BmobUser.getCurrentUser(User.class).getObjectId())) {
+            DataSupport.deleteAll(StepData.class);
+            isDataBaseChanged = true;
+            BmobQuery<BmobStepData> query = new BmobQuery<>();
+            query.addWhereEqualTo("userId", BmobUser.getCurrentUser(User.class).getObjectId());
+            query.findObjects(new FindListener<BmobStepData>() {
+                @Override
+                public void done(List<BmobStepData> list, BmobException e) {
+                    if (list != null) {
+                        for (BmobStepData bsd : list) {
+                            StepData sd = new StepData();
+                            sd.setStep(bsd.getStep());
+                            sd.setToday(bsd.getToday());
+                            temStepDatas.add(sd);
+                        }
+                        mHandler.sendEmptyMessage(0);
+                    }
+                }
+            });
+            SharePreferencesUtil.put(this,"oldUserId",SharePreferencesUtil.getString(this,"newUserId"));
+        } else {
+            Log.i("yangyang", "删除数据库未执行");
+        }
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -173,7 +205,7 @@ public class MainActivity extends BaseActivity {
     ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            StepService stepService = ((StepService.StepBinder) service).getService();
+            stepService = ((StepService.StepBinder) service).getService();
             //设置初始化数据
             String planWalk_QTY = (String) SharePreferencesUtil.getString(MainActivity.this, "plan_walk");
             stepCountFragment.getStepArcView().setCurrentCount(Integer.parseInt(planWalk_QTY), stepService.getStepCount());
@@ -182,6 +214,7 @@ public class MainActivity extends BaseActivity {
             stepService.registerCallBack(new UpdateCallBack() {
                 @Override
                 public void updateUi(int stepCount) {
+//                    EventBus.getDefault().post(new MessageEvent("步数已更新"));
                     String planWalk_QTY = SharePreferencesUtil.getString(MainActivity.this, "plan_walk");
                     stepCountFragment.getStepArcView().setCurrentCount(Integer.parseInt(planWalk_QTY), stepCount);
                 }
@@ -199,8 +232,7 @@ public class MainActivity extends BaseActivity {
         tab.addTab(tab.newTab().setIcon(R.mipmap.be_zazhi).setText("杂志"));
         tab.addTab(tab.newTab().setIcon(R.mipmap.be_wode).setText("我的"));
 
-        final TempFragment t1 = new TempFragment();
-        final TempFragment t2 = new TempFragment();
+        stepCountFragment = new StepCountFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, stepCountFragment)
                 .add(R.id.fragment_container, t1)

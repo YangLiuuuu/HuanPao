@@ -34,7 +34,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     private EditText edit_account,edit_password;
     private Button btn_login;
     private TextView tex_register,login_by_qq;
-    Tencent mTencent;
+    private Tencent mTencent;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +62,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                     @Override
                     public void onSuccess(User user) {
                         toast("登录成功");
+                        String userId = BmobUser.getCurrentUser(User.class).getObjectId();
+                        SharePreferencesUtil.put(LoginActivity.this,"newUserId",userId);
                         SharePreferencesUtil.put(LoginActivity.this,"isLogin",true);
                         startActivity(MainActivity.class,null,true);
                     }
@@ -71,7 +73,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         if (!isNetWorkConnected()){
                             toast("无法连接网络");
                         }else {
-                            toast("登录失败，请重试  " + e.getMessage());
+                            toast("登录失败，请重试  " + e.getMessage() + "," + e.getErrorCode());
                         }
                     }
                 });
@@ -120,6 +122,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         Tencent.onActivityResultData(requestCode, resultCode, data, new IUiListener() {
             @Override
             public void onComplete(Object arg0) {
@@ -149,7 +152,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 toast("取消qq授权");
             }
         });
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void loginWithAuth(BmobUser.BmobThirdUserAuth authInfo) {
@@ -160,6 +162,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                     toast("登录成功");
                     SharePreferencesUtil.put(LoginActivity.this,"isLogin",true);
                     startActivity(MainActivity.class,null,true);
+                }else {
+                    toast("登录失败 : " + e.getMessage() + "," + e.getErrorCode());
                 }
             }
         });

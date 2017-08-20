@@ -21,7 +21,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.yang.huanpao.R;
 import com.yang.huanpao.bean.BmobStepData;
@@ -94,7 +93,6 @@ public class StepService extends Service implements SensorEventListener {
 
         stopForeground(true);
         unregisterReceiver(mReceiver);
-        CURRENT_STEP = 0;
         Log.d(TAG, "StepService 关闭");
     }
 
@@ -109,6 +107,7 @@ public class StepService extends Service implements SensorEventListener {
         return START_STICKY;
     }
 
+
     public int getStepCount() {
         return CURRENT_STEP;
     }
@@ -116,9 +115,11 @@ public class StepService extends Service implements SensorEventListener {
     @Override
     public void onCreate() {
         super.onCreate();
+//        EventBus.getDefault().register(this);
 
-        initNotification();
         initTodayData();
+        initNotification();
+
         initBroadcastReceiver();
         new Thread(new Runnable() {
             @Override
@@ -129,6 +130,13 @@ public class StepService extends Service implements SensorEventListener {
         }).start();
         startTimeCount();
     }
+
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onMessageEvent(MessageEvent messageEvent){
+//        Log.i("yangyang","收到消息" + messageEvent.getMessage());
+//        initNotification();
+//        initTodayData();
+//    }
 
     private void initNotification() {
         mBuilder = new NotificationCompat.Builder(this);
@@ -147,24 +155,15 @@ public class StepService extends Service implements SensorEventListener {
 
     private void initTodayData() {
         CURRENT_DATA = getTodayData();
-//        DbUtil.createDb(this, "YangStepCount");
-//        DbUtil.getLiteOrm().setDebugged(false);
-//        List<StepData> list = DbUtil.getQueryByWhere(StepData.class, "today", new String[]{CURRENT_DATA});
-//        if (list.size() == 0 || list.isEmpty()) {
-//            CURRENT_STEP = 0;
-//        } else if (list.size() == 1) {
-//            Log.d(TAG, "StepData=" + list.get(0).toString());
-//            CURRENT_STEP = Integer.parseInt(list.get(0).getStep());
-//        } else {
-//            Log.d(TAG, "出错了");
-//        }
         List<StepData> list = DataSupport.where("today = ?",CURRENT_DATA).find(StepData.class);
         if (list.size() == 0 || list.isEmpty()){
             CURRENT_STEP = 0;
         }else if (list.size() == 1){
             CURRENT_STEP = Integer.parseInt(list.get(0).getStep());
         }else {
-            Toast.makeText(this,"StepService访问数据库出错",Toast.LENGTH_SHORT).show();
+            Log.i("yangyang","有" + list.size() + "个数据");
+//            Toast.makeText(this,"StepService访问数据库出错",Toast.LENGTH_SHORT).show();
+            CURRENT_STEP = Integer.parseInt(list.get(0).getStep());
         }
     }
 
@@ -241,10 +240,6 @@ public class StepService extends Service implements SensorEventListener {
     }
 
     private void isCall() {
-//        String time = this.getSharedPreferences("share_date", Context.MODE_MULTI_PROCESS).getString("achieveTime", "21:00");
-//        String plan = this.getSharedPreferences("share_date", Context.MODE_MULTI_PROCESS).getString("planWalk_QTY", "7000");
-//        String remind = this.getSharedPreferences("share_date", Context.MODE_MULTI_PROCESS).getString("remind", "1");
-
         String time = SharePreferencesUtil.getString(this,"achieve_time");
         String plan = SharePreferencesUtil.getString(this,"plan_walk");
         String remind = SharePreferencesUtil.getString(this,"remind");
@@ -368,19 +363,6 @@ public class StepService extends Service implements SensorEventListener {
 
     private void save() {
         int tempStep = CURRENT_STEP;
-//        List<StepData> list = DbUtil.getQueryByWhere(StepData.class, "today", new String[]{CURRENT_DATA});
-//        if (list.size() == 0 || list.isEmpty()) {
-//            StepData data = new StepData();
-//            data.setToday(CURRENT_DATA);
-//            data.setStep(tempStep + "");
-//            DbUtil.insert(data);
-//            data.save();
-//        } else if (list.size() == 1) {
-//            StepData data = list.get(0);
-//            data.setStep(tempStep + "");
-//            DbUtil.update(data);
-//            data.updateAll("today = ?",CURRENT_DATA);
-//        }
         List<StepData> stepDatas = DataSupport.where("today = ?",CURRENT_DATA).find(StepData.class);
         if (stepDatas.size() == 0 || stepDatas.isEmpty()){
             StepData data = new StepData();
@@ -392,9 +374,12 @@ public class StepService extends Service implements SensorEventListener {
                 StepData data = stepDatas.get(0);
                 data.setStep(tempStep + "");
                 data.updateAll("today = ?", CURRENT_DATA);
+            }else {
+                StepData data = stepDatas.get(0);
+                data.setStep(tempStep + "");
+                data.updateAll("today = ?", CURRENT_DATA);
             }
         }
-
         saveInBmob();
     }
 

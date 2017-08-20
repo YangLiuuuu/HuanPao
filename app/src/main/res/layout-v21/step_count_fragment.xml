@@ -4,54 +4,80 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.yang.huanpao.ui.view.StepArcView
-            android:id="@+id/step_count_arc_view"
-            android:layout_width="150dp"
-            android:layout_height="150dp" />
-
+        android:elevation="15dp">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@mipmap/stepbackground">
+            <com.yang.huanpao.ui.view.StepArcView
+                android:id="@+id/step_count_arc_view"
+                android:layout_width="150dp"
+                android:layout_height="150dp" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingBottom="10dp"
-                android:paddingTop="20dp"
-                android:text="本周目标步数"
-                android:textSize="25sp" />
+                android:layout_height="150dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/week_plan_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="15000"
-                android:textSize="20sp" />
+                <TextView
+                    android:textColor="#f3ff6b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="20dp"
+                    android:text="本周目标步数"
+                    android:textSize="25sp" />
 
-            <TextView
-                android:id="@+id/week_plan_distance_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:text="离本周目标还差5000步，加油哦！"
-                android:textSize="18sp" />
+                <TextView
+                    android:textColor="#e14343"
+                    android:id="@+id/week_plan_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="15000"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:textColor="#5dde3d"
+                    android:id="@+id/week_plan_distance_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15dp"
+                    android:text="离本周目标还差5000步，加油哦！"
+                    android:textSize="18sp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
     <View
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="10dp"
+        android:background="#fff" />
+    <TextView
+        android:text="你的近七天战绩"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:textColor="#aa3abe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
         android:background="#fff" />
     <lecho.lib.hellocharts.view.LineChartView
+        android:background="@color/ocean_blue"
         android:id="@+id/line_chart_view"
         android:layout_width="match_parent"
-        android:layout_height="185dp" />
+        android:layout_height="250dp" />
+
     <include layout="@layout/include_money_layout" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
 </LinearLayout>

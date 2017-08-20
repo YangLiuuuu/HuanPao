@@ -22,7 +22,11 @@ import com.yang.huanpao.base.BaseFragment;
 import com.yang.huanpao.bean.StepData;
 import com.yang.huanpao.config.Const;
 import com.yang.huanpao.ui.view.StepArcView;
+import com.yang.huanpao.util.MessageEvent;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.DataSupport;
 
 import java.text.SimpleDateFormat;
@@ -84,10 +88,20 @@ public class StepCountFragment extends BaseFragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.step_count_fragment,container,false);
         ButterKnife.bind(this,view);
+        EventBus.getDefault().register(this);
 
 //        initData();
         initLineChart();
         return view;
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent messageEvent){
+        if (messageEvent.getMessage().equals("步数已更新")){
+            initLineChart();
+        }
     }
 
     //qq分享测试
@@ -138,6 +152,7 @@ public class StepCountFragment extends BaseFragment{
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void initLineChart() {
+        mPointValues.clear();
         getAxisXLabel();//获取x坐标标注,及坐标数据
         Line line = new Line(mPointValues).setColor(getResources().getColor(R.color.chart_yellow,null));
         List<Line> lines = new ArrayList<>();
@@ -187,7 +202,7 @@ public class StepCountFragment extends BaseFragment{
     private void getAxisXLabel() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //        String date = sdf.format(new Date());
-        for (int i = 0 ; i < 7 ; i++){
+        for (int i = 1 ; i < 7 ; i++){
             Calendar ca = Calendar.getInstance();
             ca.setTime(new Date());
             ca.add(Calendar.DAY_OF_MONTH,-i);
@@ -200,7 +215,6 @@ public class StepCountFragment extends BaseFragment{
             }else {
                 toast("访问数据库出错");
                 mPointValues.add(new PointValue(i,0));
-
             }
             String value = date.substring(date.indexOf("-") + 1,date.lastIndexOf("-")) + "月" +
                     date.substring(date.lastIndexOf("-") + 1,date.length()) + "日";

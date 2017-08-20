@@ -52,4 +52,6 @@ dependencies {
     compile files('libs/mta-sdk-1.6.2.jar')
     compile files('libs/open_sdk_r5793.jar')
     compile files('libs/open_sdk_r5793_lite.jar')
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.android.support:cardview-v7:26.0.0-alpha1'
 }

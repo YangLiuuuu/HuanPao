@@ -31,7 +31,7 @@
     <TextView
         android:textSize="25sp"
         android:gravity="center_horizontal"
-        android:text = "即将解锁栏目"
+        android:text = "即将到达"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
