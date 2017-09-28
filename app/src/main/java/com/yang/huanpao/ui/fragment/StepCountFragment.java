@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,6 @@ import com.yang.huanpao.config.Const;
 import com.yang.huanpao.ui.view.StepArcView;
 import com.yang.huanpao.util.MessageEvent;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.DataSupport;
@@ -88,7 +88,7 @@ public class StepCountFragment extends BaseFragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.step_count_fragment,container,false);
         ButterKnife.bind(this,view);
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
 
 //        initData();
         initLineChart();
@@ -99,7 +99,8 @@ public class StepCountFragment extends BaseFragment{
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent messageEvent){
-        if (messageEvent.getMessage().equals("步数已更新")){
+        if (messageEvent.getMessage().equals("数据库已更新")){
+            Log.i("yangyang","Fragment接收到EventBus消息");
             initLineChart();
         }
     }
@@ -109,7 +110,8 @@ public class StepCountFragment extends BaseFragment{
     public void onCheckBtnClick(View view){
         Bundle bundle = new Bundle();
         bundle.putString(SocialConstants.PARAM_TARGET_URL, "http://connect.qq.com/");
-//分享的标题。注：PARAM_TITLE、PARAM_IMAGE_URL、PARAM_	SUMMARY不能全为空，最少必须有一个是有值的。
+//分享的标题。注：PARAM_TITLE、PARAM_IMAGE_URL、PARAM_	*/SUMMARY不能全为空，最少必须有一个是有值的。
+
         bundle.putString(SocialConstants.PARAM_TITLE, "我在测试");
 //分享的图片URL
         bundle.putString(SocialConstants.PARAM_IMAGE_URL,
@@ -151,10 +153,10 @@ public class StepCountFragment extends BaseFragment{
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void initLineChart() {
+    public void initLineChart() {
         mPointValues.clear();
         getAxisXLabel();//获取x坐标标注,及坐标数据
-        Line line = new Line(mPointValues).setColor(getResources().getColor(R.color.chart_yellow,null));
+        Line line = new Line(mPointValues).setColor(getResources().getColor(R.color.chart_yellow));
         List<Line> lines = new ArrayList<>();
         line.setShape(ValueShape.CIRCLE)
                 .setCubic(true)
@@ -213,8 +215,8 @@ public class StepCountFragment extends BaseFragment{
             }else if (list.size() == 1){
                 mPointValues.add(new PointValue(i,Integer.parseInt(list.get(0).getStep())));
             }else {
-                toast("访问数据库出错");
-                mPointValues.add(new PointValue(i,0));
+//                toast("访问数据库出错");
+                mPointValues.add(new PointValue(i,Integer.parseInt(list.get(0).getStep())));
             }
             String value = date.substring(date.indexOf("-") + 1,date.lastIndexOf("-")) + "月" +
                     date.substring(date.lastIndexOf("-") + 1,date.length()) + "日";

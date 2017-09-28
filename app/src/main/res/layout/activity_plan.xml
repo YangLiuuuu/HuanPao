@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -24,21 +26,20 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:onClick="onBackward"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
                 android:src="@mipmap/arrow_back_white"
                 android:visibility="visible" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="#00000000"
                 android:gravity="center_horizontal"
-                android:paddingLeft="10px"
-                android:paddingRight="10px"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:text="锻炼计划"
                 android:textColor="#ffffff"
                 android:textSize="20sp" />
@@ -48,16 +49,16 @@
                 android:id="@+id/iv_right"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
                 android:layout_gravity="center"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxEms="4"
-                android:maxWidth="80px"
+                android:maxWidth="80dp"
                 android:minEms="2"
                 android:visibility="invisible"
-                android:paddingLeft="40px"
-                android:paddingRight="40px"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
                 android:singleLine="true"/>
         </LinearLayout>
 
@@ -70,7 +71,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30px"
+        android:layout_marginTop="30dp"
         android:background="#ffffff"
         android:gravity="center_vertical"
         android:orientation="vertical">
@@ -91,12 +92,11 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/tv_step_number"
+                android:id="@+id/edit_step_number"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:background="#ffffff"
-                android:gravity="center_vertical|right"
+                android:gravity="center_vertical|start"
                 android:text="7000"
                 android:textColor="#000000"
                 android:textSize="18sp"
@@ -119,13 +119,12 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/tv_week_plan_number"
+                android:id="@+id/edit_week_plan_number"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:background="#ffffff"
-                android:gravity="center_vertical|right"
-                android:text="490000"
+                android:gravity="center_vertical|start"
+                android:text="70000"
                 android:inputType="number"
                 android:textColor="#000000"
                 android:textSize="18sp" />

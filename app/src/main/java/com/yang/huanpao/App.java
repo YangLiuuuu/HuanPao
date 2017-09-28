@@ -18,12 +18,15 @@ public class App extends LitePalApplication {
     public void onCreate() {
         super.onCreate();
 
+        setDatabase();
 
-        SharePreferencesUtil.put(this, "plan_walk", "7000");
-        SharePreferencesUtil.put(this, "remind", "1");
-        SharePreferencesUtil.put(this, "achieve_time", "8:00");
-
-        SharePreferencesUtil.put(this, "isFirstIn", false);
+        if (this.getSharedPreferences("ly",MODE_PRIVATE).getBoolean("isFirstIn",true)){
+            SharePreferencesUtil.put(this, "plan_walk", "7000");
+            SharePreferencesUtil.put(this, "remind", "1");
+            SharePreferencesUtil.put(this, "achieve_time", "8:00");
+            SharePreferencesUtil.put(this,"oldUserId","0");
+            this.getSharedPreferences("ly",MODE_PRIVATE).edit().putBoolean("isFirstIn",false).apply();
+        }
 
         Bmob.initialize(this, Const.BMOB_APP_ID);
 

@@ -104,7 +104,7 @@ public class StepService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_STICKY;
+        return START_STICKY_COMPATIBILITY;
     }
 
 
@@ -125,7 +125,7 @@ public class StepService extends Service implements SensorEventListener {
             @Override
             public void run() {
                 startStepDetector();
-                Log.i("yang","开始计步");
+                Log.i("yangg","开始计步");
             }
         }).start();
         startTimeCount();
@@ -352,7 +352,7 @@ public class StepService extends Service implements SensorEventListener {
         if (mCallBack != null) {
             mCallBack.updateUi(CURRENT_STEP);
         }
-        Log.d(TAG, "updateNotification()");
+        Log.d("yangyang", "updateNotification()");
     }
 
     private UpdateCallBack mCallBack;

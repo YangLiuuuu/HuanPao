@@ -32,7 +32,7 @@ public class PlanActivity extends BaseActivity implements View.OnClickListener{
     private LinearLayout layout_titlebar;
     private ImageView iv_left;
     private ImageView iv_right;
-    private EditText tv_step_number;
+    private EditText edit_step_number,edit_week_plan_number;
     private CheckBox cb_remind;
     private TextView tv_remind_time;
     private Button btn_save;
@@ -44,7 +44,10 @@ public class PlanActivity extends BaseActivity implements View.OnClickListener{
         layout_titlebar = (LinearLayout) findViewById(R.id.layout_titlebar);
         iv_left = (ImageView) findViewById(R.id.iv_left);
         iv_right = (ImageView) findViewById(R.id.iv_right);
-        tv_step_number = (EditText) findViewById(R.id.tv_step_number);
+        edit_step_number = (EditText) findViewById(R.id.edit_step_number);
+        edit_week_plan_number = (EditText) findViewById(R.id.edit_week_plan_number);
+        edit_step_number.setOnClickListener(this);
+        edit_week_plan_number.setOnClickListener(this);
         cb_remind = (CheckBox) findViewById(R.id.cb_remind);
         tv_remind_time = (TextView) findViewById(R.id.tv_remind_time);
         btn_save = (Button) findViewById(R.id.btn_save);
@@ -73,9 +76,9 @@ public class PlanActivity extends BaseActivity implements View.OnClickListener{
         String achieveTime = SharePreferencesUtil.getString(this,"achieve_time");
         if (!planWalk_QTY.isEmpty()){
             if ("0".equals(planWalk_QTY)){
-                tv_step_number.setText("7000");
+                edit_step_number.setText("7000");
             }else {
-                tv_step_number.setText(planWalk_QTY);
+                edit_step_number.setText(planWalk_QTY);
             }
         }
         if (!remind.isEmpty()){
@@ -103,6 +106,9 @@ public class PlanActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case R.id.tv_remind_time:
                 showTimeDialog1();
+                break;
+            case R.id.edit_step_number:
+                ((EditText)v).setSelection(((EditText) v).getText().length());
                 break;
         }
     }
@@ -134,7 +140,7 @@ public class PlanActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private void save() {
-        walk_qty = tv_step_number.getText().toString();
+        walk_qty = edit_step_number.getText().toString();
         if (cb_remind.isChecked()){
             remind = "1";
         }else {

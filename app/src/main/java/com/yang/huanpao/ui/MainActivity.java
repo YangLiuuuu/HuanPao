@@ -67,7 +67,7 @@ public class MainActivity extends BaseActivity {
 
     private StepService stepService;
 
-    StepCountFragment stepCountFragment;
+    StepCountFragment stepCountFragment = new StepCountFragment();
 
     TempFragment t1 = new TempFragment();
     TempFragment t2 = new TempFragment();
@@ -136,7 +136,10 @@ public class MainActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent message){
-
+        if(message.getMessage().equals("数据库已更新")){
+            Log.i("yangyang","MainActivity接收到EventBus消息");
+            stepCountFragment.initLineChart();
+        }
     }
 
     private void initDataBase() {
@@ -228,11 +231,10 @@ public class MainActivity extends BaseActivity {
     };
 
     private void initTab() {
-        tab.addTab(tab.newTab().setIcon(R.mipmap.be_dongtai).setText("计步"));
-        tab.addTab(tab.newTab().setIcon(R.mipmap.be_zazhi).setText("杂志"));
-        tab.addTab(tab.newTab().setIcon(R.mipmap.be_wode).setText("我的"));
+        tab.addTab(tab.newTab().setIcon(R.mipmap.step).setText("计步"));
+        tab.addTab(tab.newTab().setIcon(R.mipmap.magzine).setText("杂志"));
+        tab.addTab(tab.newTab().setIcon(R.mipmap.mine).setText("我的"));
 
-        stepCountFragment = new StepCountFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, stepCountFragment)
                 .add(R.id.fragment_container, t1)

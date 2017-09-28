@@ -38,14 +38,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login2);
 
         edit_account = (EditText) findViewById(R.id.edit_account);
         edit_password = (EditText) findViewById(R.id.edit_password);
         edit_account.setText("123456");
         edit_password.setText("123456");
+        edit_password.setSelection(edit_account.getText().length());
+        edit_account.setSelection(edit_password.getText().length());
         btn_login = (Button) findViewById(R.id.btn_login);
-        tex_register = (TextView) findViewById(R.id.tex_register);
+        tex_register = (TextView) findViewById(R.id.text_register);
         tex_register.setOnClickListener(this);
         btn_login.setOnClickListener(this);
         login_by_qq = (TextView) findViewById(R.id.login_by_qq);
